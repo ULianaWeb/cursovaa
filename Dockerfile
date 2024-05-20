@@ -1,10 +1,11 @@
-# Stage 1: Build the application
+# Use Maven to build the project
 FROM maven:3.8.5-openjdk-17 AS build
 WORKDIR /app
-COPY . .
-RUN mvn clean package
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-# Stage 2: Run the application
+# Use a lightweight JDK image to run the application
 FROM openjdk:17.0.1-jdk-slim
 WORKDIR /app
 COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar demo.jar
